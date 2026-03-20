@@ -1,13 +1,11 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./db/index";
 import errorMiddleware from "./middlewares/error.middleware";
-
-dotenv.config();
+import env from "./config/env";
 
 // constants
-const PORT = process.env.PORT || 8000;
+const PORT = env.port;
 
 const bootstrap = async () => {
   await connectDB();
@@ -15,7 +13,7 @@ const bootstrap = async () => {
   const app = express();
 
   // middlewares
-  app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+  app.use(cors({ origin: env.clientUrl, credentials: true }));
   app.use(express.json({ limit: "10kb" }));
   app.use(express.urlencoded({ extended: true }));
 
