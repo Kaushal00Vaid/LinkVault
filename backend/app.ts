@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./db/index";
+import errorMiddleware from "./middlewares/error.middleware";
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ const bootstrap = async () => {
   app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok" });
   });
+
+  // error middleware
+  app.use(errorMiddleware);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
