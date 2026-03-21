@@ -69,7 +69,7 @@ export const createVault = async (
 // get all vaults
 export const getUserVaults = async (userId: mongoose.Types.ObjectId) => {
   const vaults = await Vault.aggregate([
-    { $match: { userId } },
+    { $match: { userId: new mongoose.Types.ObjectId(userId) } },
     // join
     {
       $lookup: {

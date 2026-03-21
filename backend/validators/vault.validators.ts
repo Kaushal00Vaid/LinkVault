@@ -59,7 +59,7 @@ export const updateVaultSchema = z.object({
   }),
 
   params: z.object({
-    slog: z.string({ error: "Vault slug is required" }),
+    slug: z.string({ error: "Vault slug is required" }),
   }),
 });
 
