@@ -5,6 +5,7 @@ import errorMiddleware from "./middlewares/error.middleware";
 import env from "./config/env";
 import cookieParser from "cookie-parser";
 import authRouter from "./modules/auth/auth.routes";
+import vaultRouter from "./modules/vault/vault.routes";
 
 // constants
 const PORT = env.port;
@@ -20,7 +21,9 @@ const bootstrap = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
+  // all routers
   app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/vaults", vaultRouter);
 
   app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok" });
