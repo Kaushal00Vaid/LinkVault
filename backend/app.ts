@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./modules/auth/auth.routes";
 import vaultRouter from "./modules/vault/vault.routes";
 import linkRouter from "./modules/link/link.routes";
+import searchRouter from "./modules/search/search.routes";
 
 // constants
 const PORT = env.port;
@@ -26,6 +27,7 @@ const bootstrap = async () => {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/vaults", vaultRouter);
   app.use("/api/v1/vaults/:slug/links", linkRouter);
+  app.use("/api/v1/search", searchRouter);
 
   app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok" });
