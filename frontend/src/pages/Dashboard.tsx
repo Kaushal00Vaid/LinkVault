@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 import VaultDetailsSheet from "@/components/vault/VaultDetailsSheet"
 import EditVaultDialog from "@/components/vault/EditVaultDialog"
+import GlobalSearch from "../components/search/GlobalSearch"
 import { type Vault } from "../api/vault.api"
 
 const nodeTypes: NodeTypes = {
@@ -45,6 +46,20 @@ export default function Dashboard() {
       setIsSheetOpen(true)
     }
   }, [])
+
+  // --- NEW Handler for opening vaults from Search ---
+  const handleOpenVaultFromSearch = useCallback(
+    (slug: string) => {
+      if (response?.data) {
+        const foundVault = response.data.find((v) => v.slug === slug)
+        if (foundVault) {
+          setSelectedVault(foundVault)
+          setIsSheetOpen(true)
+        }
+      }
+    },
+    [response?.data]
+  )
 
   // Transform vaults into ReactFlow Nodes
   const initialNodes: Node[] = useMemo(() => {
@@ -112,6 +127,11 @@ export default function Dashboard() {
           <span className="hidden rounded-full bg-secondary px-3 py-1 text-sm font-medium text-muted-foreground sm:inline-block">
             {user?.name}'s Workspace
           </span>
+        </div>
+
+        {/* SEARCH BAR */}
+        <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
+          <GlobalSearch onOpenVault={handleOpenVaultFromSearch} />
         </div>
 
         <div className="flex items-center gap-3">
