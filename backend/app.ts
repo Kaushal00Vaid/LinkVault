@@ -8,26 +8,75 @@ import authRouter from "./modules/auth/auth.routes";
 import vaultRouter from "./modules/vault/vault.routes";
 import linkRouter from "./modules/link/link.routes";
 import searchRouter from "./modules/search/search.routes";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 
-// constants
-const PORT = env.port;
+// rate limiters
+
+// for auth
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  message: {
+    success: false,
+    message: "Too many requests, please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// api rate limiter
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200,
+  message: {
+    success: false,
+    message: "Too many requests, please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const bootstrap = async () => {
   await connectDB();
 
   const app = express();
 
-  // middlewares
+  // security middlewares
+  app.use(helmet());
   app.use(cors({ origin: env.clientUrl, credentials: true }));
+
+  // middlewares
   app.use(express.json({ limit: "10kb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
+  // NoSQL injection protection
+  app.use((req, res, next) => {
+    const sanitize = (obj: any): any => {
+      if (!obj || typeof obj !== "object") return obj;
+
+      for (const key in obj) {
+        if (key.startsWith("$") || key.includes(".")) {
+          delete obj[key];
+        } else {
+          sanitize(obj[key]);
+        }
+      }
+    };
+
+    sanitize(req.body);
+    sanitize(req.query);
+    sanitize(req.params);
+
+    next();
+  });
+
   // all routers
-  app.use("/api/v1/auth", authRouter);
-  app.use("/api/v1/vaults", vaultRouter);
-  app.use("/api/v1/vaults/:slug/links", linkRouter);
-  app.use("/api/v1/search", searchRouter);
+  app.use("/api/v1/auth", authLimiter, authRouter);
+  app.use("/api/v1/vaults", apiLimiter, vaultRouter);
+  app.use("/api/v1/vaults/:slug/links", apiLimiter, linkRouter);
+  app.use("/api/v1/search", apiLimiter, searchRouter);
 
   app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok" });
@@ -36,8 +85,8 @@ const bootstrap = async () => {
   // error middleware
   app.use(errorMiddleware);
 
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  app.listen(env.port, () => {
+    console.log(`Server is running on port ${env.port}`);
   });
 };
 
