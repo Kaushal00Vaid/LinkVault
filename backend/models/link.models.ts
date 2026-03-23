@@ -46,28 +46,27 @@ const linkSchema = new mongoose.Schema<ILink>(
       trim: true,
       maxLength: [300, "Description must be at most 300 characters long"],
     },
-    tags: [
-      {
-        type: [String],
-        enum: {
-          values: [
-            "Docs",
-            "UI/UX",
-            "Tutorial",
-            "Deployment",
-            "Tool",
-            "Reference",
-            "Other",
-          ],
-          message: "{VALUE} is not a valid tag",
-        },
-        validate: {
-          validator: (tags: String[]) => tags.length <= 5,
-          message: "A link can have at most 5 tags",
-        },
-        default: [],
+    tags: {
+      type: [String],
+      enum: {
+        values: [
+          "Docs",
+          "UI/UX",
+          "Tutorial",
+          "Deployment",
+          "Tool",
+          "Reference",
+          "Other",
+        ],
+        message: "{VALUE} is not a valid tag",
       },
-    ],
+      validate: {
+        validator: (tags: String[]) => tags.length <= 5,
+        message: "A link can have at most 5 tags",
+      },
+      default: [],
+    },
+
     vaultId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vault",
