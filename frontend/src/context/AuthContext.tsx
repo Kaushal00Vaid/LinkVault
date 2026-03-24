@@ -29,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const token = res.data.accessToken
         setToken(token)
+        setAccessToken(token)
 
         const payload = JSON.parse(atob(token.split(".")[1]))
         setUser({ _id: payload._id, name: payload.name, email: payload.email })

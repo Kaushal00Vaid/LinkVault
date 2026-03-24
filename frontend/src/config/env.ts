@@ -4,6 +4,7 @@ const getEnv = (key: string, fallback?: string): string => {
   if (!value) {
     throw new Error(`Missing required environment variable: ${key}`)
   }
+  console.log(value)
   return value
 }
 
