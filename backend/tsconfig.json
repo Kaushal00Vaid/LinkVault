@@ -3,7 +3,7 @@
   "compilerOptions": {
     "typeRoots": ["./types", "./node_modules/@types"],
     // File Layout
-    // "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
 
     // Environment Settings
@@ -20,6 +20,8 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
+
+    "esModuleInterop": true,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
@@ -41,5 +43,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

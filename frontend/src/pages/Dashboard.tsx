@@ -43,7 +43,7 @@ export default function Dashboard() {
   })
 
   // node clicks
-  const onNodeClick: NodeMouseHandler = useCallback((event, node) => {
+  const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
     if (node.data) {
       setSelectedVault(node.data as unknown as Vault)
       setIsSheetOpen(true)
@@ -171,7 +171,7 @@ export default function Dashboard() {
 
           <MiniMap
             position="bottom-right"
-            className="!m-6 overflow-hidden rounded-lg border-border bg-card shadow-md"
+            className="m-6! overflow-hidden rounded-lg border-border bg-card shadow-md"
             nodeColor={(node) => (node.data?.color as string) || "#09443D"}
             maskColor="rgba(240, 237, 223, 0.6)"
             zoomable

@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./db/index";
 import errorMiddleware from "./middlewares/error.middleware";
 import env from "./config/env";
 import cookieParser from "cookie-parser";
@@ -16,7 +15,7 @@ import helmet from "helmet";
 
 // for auth
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 50,
   message: {
     success: false,
@@ -28,7 +27,7 @@ const authLimiter = rateLimit({
 
 // api rate limiter
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 200,
   message: {
     success: false,
@@ -38,58 +37,50 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-const bootstrap = async () => {
-  await connectDB();
+const app = express();
 
-  const app = express();
+// security middlewares
+app.use(helmet());
+app.use(cors({ origin: env.clientUrl, credentials: true }));
 
-  // security middlewares
-  app.use(helmet());
-  app.use(cors({ origin: env.clientUrl, credentials: true }));
+// middlewares
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-  // middlewares
-  app.use(express.json({ limit: "10kb" }));
-  app.use(express.urlencoded({ extended: true }));
-  app.use(cookieParser());
+// NoSQL injection protection
+app.use((req, res, next) => {
+  const sanitize = (obj: any): any => {
+    if (!obj || typeof obj !== "object") return obj;
 
-  // NoSQL injection protection
-  app.use((req, res, next) => {
-    const sanitize = (obj: any): any => {
-      if (!obj || typeof obj !== "object") return obj;
-
-      for (const key in obj) {
-        if (key.startsWith("$") || key.includes(".")) {
-          delete obj[key];
-        } else {
-          sanitize(obj[key]);
-        }
+    for (const key in obj) {
+      if (key.startsWith("$") || key.includes(".")) {
+        delete obj[key];
+      } else {
+        sanitize(obj[key]);
       }
-    };
+    }
+  };
 
-    sanitize(req.body);
-    sanitize(req.query);
-    sanitize(req.params);
+  sanitize(req.body);
+  sanitize(req.query);
+  sanitize(req.params);
 
-    next();
-  });
+  next();
+});
 
-  // all routers
-  app.use("/api/v1/auth", authLimiter, authRouter);
-  app.use("/api/v1/public", publicRouter);
-  app.use("/api/v1/vaults", apiLimiter, vaultRouter);
-  app.use("/api/v1/vaults/:slug/links", apiLimiter, linkRouter);
-  app.use("/api/v1/search", apiLimiter, searchRouter);
+// all routers
+app.use("/api/v1/auth", authLimiter, authRouter);
+app.use("/api/v1/public", publicRouter);
+app.use("/api/v1/vaults", apiLimiter, vaultRouter);
+app.use("/api/v1/vaults/:slug/links", apiLimiter, linkRouter);
+app.use("/api/v1/search", apiLimiter, searchRouter);
 
-  app.get("/health", (req, res) => {
-    res.status(200).json({ status: "ok" });
-  });
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
-  // error middleware
-  app.use(errorMiddleware);
+// error middleware
+app.use(errorMiddleware);
 
-  app.listen(env.port, () => {
-    console.log(`Server is running on port ${env.port}`);
-  });
-};
-
-bootstrap();
+export default app;
