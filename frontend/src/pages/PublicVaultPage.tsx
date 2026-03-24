@@ -160,6 +160,10 @@ export default function PublicVaultPage() {
                     {link.title}
                     <ExternalLink className="h-4 w-4 opacity-40 transition-opacity group-hover:opacity-100" />
                   </a>
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground/60">
+                    <LinkIcon className="h-3 w-3 shrink-0" />
+                    <span className="max-w-[50ch] truncate">{link.url}</span>
+                  </p>
                   {link.description && (
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {link.description}
