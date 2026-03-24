@@ -59,7 +59,7 @@ export default function AuthCallback() {
     } else {
       navigate("/login")
     }
-  }, [searchParams, navigate, loginUser])
+  }, [])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background text-primary">

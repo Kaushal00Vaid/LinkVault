@@ -21,6 +21,7 @@ import VaultDetailsSheet from "@/components/vault/VaultDetailsSheet"
 import EditVaultDialog from "@/components/vault/EditVaultDialog"
 import GlobalSearch from "../components/search/GlobalSearch"
 import { type Vault } from "../api/vault.api"
+import { useNavigate } from "react-router-dom"
 
 const nodeTypes: NodeTypes = {
   vaultNode: VaultNode,
@@ -32,6 +33,8 @@ export default function Dashboard() {
 
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
+
+  const navigate = useNavigate()
 
   // Fetch from /api/v1/vaults
   const { data: response, isLoading } = useQuery({
@@ -114,7 +117,10 @@ export default function Dashboard() {
       {/* Navbar */}
       <header className="relative z-10 flex h-16 shrink-0 items-center justify-between border-b border-border bg-card px-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div
+            className="flex cursor-pointer items-center gap-2"
+            onClick={() => navigate("/")}
+          >
             <img
               src="/logos/logo.png"
               alt="LinkVault"
