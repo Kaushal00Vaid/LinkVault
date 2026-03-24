@@ -8,6 +8,7 @@ import authRouter from "./modules/auth/auth.routes";
 import vaultRouter from "./modules/vault/vault.routes";
 import linkRouter from "./modules/link/link.routes";
 import searchRouter from "./modules/search/search.routes";
+import publicRouter from "./modules/public/public.routes";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 
@@ -74,6 +75,7 @@ const bootstrap = async () => {
 
   // all routers
   app.use("/api/v1/auth", authLimiter, authRouter);
+  app.use("/api/v1/public", publicRouter);
   app.use("/api/v1/vaults", apiLimiter, vaultRouter);
   app.use("/api/v1/vaults/:slug/links", apiLimiter, linkRouter);
   app.use("/api/v1/search", apiLimiter, searchRouter);
