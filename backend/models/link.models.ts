@@ -18,6 +18,7 @@ export interface ILink extends Document {
   vaultId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   isFavorite: boolean;
+  isCompleted: boolean;
 }
 
 const linkSchema = new mongoose.Schema<ILink>(
@@ -78,6 +79,10 @@ const linkSchema = new mongoose.Schema<ILink>(
       required: [true, "Link must belong to a user"],
     },
     isFavorite: {
+      type: Boolean,
+      default: false,
+    },
+    isCompleted: {
       type: Boolean,
       default: false,
     },

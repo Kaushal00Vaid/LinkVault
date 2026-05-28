@@ -159,3 +159,27 @@ export const toggleFavorite = async (
 
   return link;
 };
+
+// toggle completed (strikethrough checkbox)
+export const toggleCompleted = async (
+  slug: string,
+  userId: mongoose.Types.ObjectId,
+  linkId: string,
+) => {
+  const vault = await resolveVault(slug, userId);
+
+  if (!mongoose.Types.ObjectId.isValid(linkId)) {
+    throw new ApiError(400, "Invalid link ID");
+  }
+
+  const link = await Link.findOne({ _id: linkId, vaultId: vault._id });
+
+  if (!link) {
+    throw new ApiError(404, "Link not found");
+  }
+
+  link.isCompleted = !link.isCompleted;
+  await link.save();
+
+  return link;
+};

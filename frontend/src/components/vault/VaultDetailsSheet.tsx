@@ -30,6 +30,7 @@ import {
   Link as LinkIcon,
   ExternalLink,
   Loader2,
+  Check,
 } from "lucide-react"
 import { useState } from "react"
 import EditLinkDialog from "../links/EditLinkDialog"
@@ -85,6 +86,15 @@ export default function VaultDetailsSheet({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["links", vault?.slug] })
       queryClient.invalidateQueries({ queryKey: ["vaults"] }) // Updates count on canvas
+    },
+  })
+
+  // Toggle Completed Mutation
+  const toggleCompletedMutation = useMutation({
+    mutationFn: (linkId: string) =>
+      linkApi.toggleCompleted(vault!.slug, linkId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["links", vault?.slug] })
     },
   })
 
@@ -212,27 +222,65 @@ export default function VaultDetailsSheet({
                 links.map((link) => (
                   <div
                     key={link._id}
-                    className="group mx-2 rounded-xl border border-border bg-card p-5 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
+                    className={`group mx-2 rounded-xl border bg-card p-5 shadow-sm transition-all hover:shadow-md ${
+                      link.isCompleted
+                        ? "border-border/50 opacity-70"
+                        : "border-border hover:border-primary/40"
+                    }`}
                   >
                     <div className="flex items-start justify-between gap-4">
+                      {/* Checkbox */}
+                      <button
+                        onClick={() =>
+                          toggleCompletedMutation.mutate(link._id)
+                        }
+                        disabled={toggleCompletedMutation.isPending}
+                        aria-label={link.isCompleted ? "Mark as not done" : "Mark as done"}
+                        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all ${
+                          link.isCompleted
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border hover:border-primary/60"
+                        }`}
+                      >
+                        {link.isCompleted && (
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        )}
+                      </button>
+
                       <div className="min-w-0 flex-1">
                         <a
                           href={link.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex w-fit items-center gap-2 truncate text-base font-semibold text-foreground transition-colors hover:text-primary"
+                          className={`flex w-fit items-center gap-2 truncate text-base font-semibold transition-colors hover:text-primary ${
+                            link.isCompleted
+                              ? "text-muted-foreground line-through"
+                              : "text-foreground"
+                          }`}
                         >
                           {link.title}
                           <ExternalLink className="h-3.5 w-3.5 opacity-40 transition-opacity group-hover:opacity-100" />
                         </a>
-                        <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground/60">
+                        <p
+                          className={`mt-0.5 flex items-center gap-1 text-xs ${
+                            link.isCompleted
+                              ? "text-muted-foreground/40 line-through"
+                              : "text-muted-foreground/60"
+                          }`}
+                        >
                           <LinkIcon className="h-3 w-3 shrink-0" />
                           <span className="max-w-[50ch] truncate">
                             {link.url}
                           </span>
                         </p>
                         {link.description && (
-                          <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                          <p
+                            className={`mt-1.5 line-clamp-2 text-sm leading-relaxed ${
+                              link.isCompleted
+                                ? "text-muted-foreground/40 line-through"
+                                : "text-muted-foreground"
+                            }`}
+                          >
                             {link.description}
                           </p>
                         )}
@@ -259,11 +307,17 @@ export default function VaultDetailsSheet({
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 hover:bg-accent"
-                          onClick={() => toggleLinkFavMutation.mutate(link._id)}
+                          onClick={() =>
+                            toggleLinkFavMutation.mutate(link._id)
+                          }
                           disabled={toggleLinkFavMutation.isPending}
                         >
                           <Star
-                            className={`h-4 w-4 ${link.isFavorite ? "fill-yellow-500 text-yellow-500" : "text-muted-foreground"}`}
+                            className={`h-4 w-4 ${
+                              link.isFavorite
+                                ? "fill-yellow-500 text-yellow-500"
+                                : "text-muted-foreground"
+                            }`}
                           />
                         </Button>
                         <Button

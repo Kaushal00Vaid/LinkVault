@@ -12,6 +12,7 @@ import {
   getLinkByIdHandler,
   getVaultLinkshandler,
   toggleFavouriteHandler,
+  toggleCompletedHandler,
   updateLinkHandler,
 } from "./link.controller";
 
@@ -25,5 +26,6 @@ router.get("/:linkId", getLinkByIdHandler);
 router.patch("/:linkId", validate(updateLinkSchema), updateLinkHandler);
 router.delete("/:linkId", deleteLinkHandler);
 router.patch("/:linkId/favorite", toggleFavouriteHandler);
+router.patch("/:linkId/done", toggleCompletedHandler);
 
 export default router;

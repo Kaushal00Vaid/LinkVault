@@ -11,6 +11,7 @@ export interface Link {
   vaultId: string
   userId: string
   isFavorite: boolean
+  isCompleted: boolean
   createdAt: string
   updatedAt: string
 }
@@ -69,6 +70,14 @@ export const linkApi = {
     linkId: string
   ): Promise<ApiResponse<Link>> => {
     const res = await api.patch(`/vaults/${slug}/links/${linkId}/favorite`)
+    return res.data
+  },
+
+  toggleCompleted: async (
+    slug: string,
+    linkId: string
+  ): Promise<ApiResponse<Link>> => {
+    const res = await api.patch(`/vaults/${slug}/links/${linkId}/done`)
     return res.data
   },
 }

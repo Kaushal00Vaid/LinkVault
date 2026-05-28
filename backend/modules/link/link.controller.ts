@@ -11,6 +11,7 @@ import {
   getLinkById,
   getVaultLinks,
   toggleFavorite,
+  toggleCompleted,
   updateLink,
 } from "./link.service";
 import ApiResponse from "../../utils/ApiResponse";
@@ -105,6 +106,26 @@ export const toggleFavouriteHandler = asyncHandler(
         new ApiResponse(
           200,
           `Link ${link.isFavorite ? "added to" : "removed from"} favorites`,
+          link,
+        ),
+      );
+  },
+);
+
+// toggle completed
+export const toggleCompletedHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { slug, linkId } = req.params;
+    const userId = req.user!._id;
+
+    const link = await toggleCompleted(slug as string, userId, linkId as string);
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          `Link marked as ${link.isCompleted ? "done" : "not done"}`,
           link,
         ),
       );
