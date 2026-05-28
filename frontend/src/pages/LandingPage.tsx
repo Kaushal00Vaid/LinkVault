@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import {
   Search,
   Folder,
@@ -44,7 +45,8 @@ export default function LandingPage() {
           />
           LinkVault
         </div>
-        <div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <Button
               onClick={() => navigate("/dashboard")}

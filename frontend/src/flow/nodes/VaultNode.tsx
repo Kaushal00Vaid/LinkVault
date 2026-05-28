@@ -15,7 +15,7 @@ interface VaultNodeProps {
 
 export default function VaultNode({ data }: VaultNodeProps) {
   return (
-    <div className="group max-w-65 min-w-55 cursor-pointer rounded-xl border-2 border-border bg-card px-4 py-4 shadow-sm transition-all hover:border-[#09443D] hover:shadow-md">
+    <div className="group max-w-65 min-w-55 cursor-pointer rounded-xl border-2 border-border bg-card px-4 py-4 shadow-sm transition-all hover:border-primary hover:shadow-md">
       <Handle type="target" position={Position.Top} className="opacity-0" />
 
       <div className="flex items-start gap-3">
@@ -26,7 +26,7 @@ export default function VaultNode({ data }: VaultNodeProps) {
           <Folder size={18} />
         </div>
         <div className="flex-1">
-          <h3 className="line-clamp-2 leading-tight font-bold text-foreground transition-colors group-hover:text-[#09443D]">
+          <h3 className="line-clamp-2 leading-tight font-bold text-foreground transition-colors group-hover:text-primary">
             {data.name}
           </h3>
           {data.description && (

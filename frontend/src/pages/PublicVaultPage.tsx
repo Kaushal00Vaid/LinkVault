@@ -4,6 +4,7 @@ import { publicApi } from "../api/public.api"
 import { useAuth } from "../context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import {
   Loader2,
   ArrowLeft,
@@ -82,7 +83,10 @@ export default function PublicVaultPage() {
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Explore
         </Button>
-        <div className="font-bold text-primary">LinkVault</div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <div className="font-bold text-primary">LinkVault</div>
+        </div>
       </header>
 
       <main className="mx-auto max-w-4xl px-6 py-12">

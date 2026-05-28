@@ -22,6 +22,7 @@ import EditVaultDialog from "@/components/vault/EditVaultDialog"
 import GlobalSearch from "../components/search/GlobalSearch"
 import { type Vault } from "../api/vault.api"
 import { useNavigate } from "react-router-dom"
+import { ThemeToggle } from "@/components/ThemeToggle"
 
 const nodeTypes: NodeTypes = {
   vaultNode: VaultNode,
@@ -99,14 +100,14 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#f0eddf]">
+      <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="flex animate-pulse flex-col items-center gap-4">
           <img
             src="/logos/logo.png"
             alt="LinkVault"
             className="h-12 w-12 animate-bounce object-contain"
           />
-          <p className="font-medium text-[#09443D]">Loading Workspace...</p>
+          <p className="font-medium text-primary">Loading Workspace...</p>
         </div>
       </div>
     )
@@ -126,7 +127,7 @@ export default function Dashboard() {
               alt="LinkVault"
               className="h-8 w-8 object-contain"
             />
-            <h1 className="text-xl font-bold tracking-tight text-[#09443D]">
+            <h1 className="text-xl font-bold tracking-tight text-primary">
               LinkVault
             </h1>
           </div>
@@ -141,6 +142,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <CreateVaultDialog />
           <Button
             variant="ghost"
@@ -164,7 +166,7 @@ export default function Dashboard() {
           fitViewOptions={{ maxZoom: 1, padding: 0.2 }} // Fixes the aggressive zoom
           minZoom={0.1}
           maxZoom={2}
-          className="bg-[#f0eddf]"
+          className="bg-[#f0eddf] dark:bg-[#0b1a0f]"
         >
           <Background color="#c9c1b0" gap={24} size={2} />
           <Controls className="border-border bg-card fill-foreground shadow-md" />
@@ -172,8 +174,8 @@ export default function Dashboard() {
           <MiniMap
             position="bottom-right"
             className="m-6! overflow-hidden rounded-lg border-border bg-card shadow-md"
-            nodeColor={(node) => (node.data?.color as string) || "#09443D"}
-            maskColor="rgba(240, 237, 223, 0.6)"
+            nodeColor={(node) => (node.data?.color as string) || "var(--primary)"}
+            maskColor="rgba(0, 0, 0, 0.08)"
             zoomable
             pannable
           />

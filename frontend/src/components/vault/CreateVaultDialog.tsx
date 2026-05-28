@@ -54,14 +54,14 @@ export default function CreateVaultDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#09443D] text-[#f0eddf] hover:bg-[#09443D]/90">
+        <Button className="">
           <Plus className="mr-2 h-4 w-4" /> New Vault
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-[#c9c1b0] sm:max-w-md">
+      <DialogContent className="border-border sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-[#09443D]">Create New Vault</DialogTitle>
-          <DialogDescription className="text-[#4f3b38]/70">
+          <DialogTitle className="text-primary">Create New Vault</DialogTitle>
+          <DialogDescription className="text-muted-foreground">
             A vault is a collection of resources for a specific stack or
             project.
           </DialogDescription>
@@ -70,7 +70,7 @@ export default function CreateVaultDialog() {
           {error && <div className="text-sm text-destructive">{error}</div>}
 
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-[#4f3b38]">
+            <Label htmlFor="name" className="text-foreground">
               Vault Name
             </Label>
             <Input
@@ -87,7 +87,7 @@ export default function CreateVaultDialog() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-[#4f3b38]">
+            <Label htmlFor="description" className="text-foreground">
               Description (Optional)
             </Label>
             <Textarea
@@ -101,12 +101,12 @@ export default function CreateVaultDialog() {
             />
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border border-[#c9c1b0] p-3">
+          <div className="flex items-center justify-between rounded-lg border border-border p-3">
             <div className="space-y-0.5">
-              <Label className="flex items-center gap-2 text-base text-[#4f3b38]">
+              <Label className="flex items-center gap-2 text-base text-foreground">
                 {formData.isPublic ? (
                   <>
-                    <Globe className="h-4 w-4 text-[#09443D]" />
+                    <Globe className="h-4 w-4 text-primary" />
                     Public Vault
                   </>
                 ) : (
@@ -127,12 +127,12 @@ export default function CreateVaultDialog() {
               onCheckedChange={(checked) =>
                 setFormData({ ...formData, isPublic: checked })
               }
-              className="data-[state=checked]:bg-[#09443D]"
+              className="data-[state=checked]:bg-primary"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="color" className="text-[#4f3b38]">
+            <Label htmlFor="color" className="text-foreground">
               Theme Color
             </Label>
             <div className="flex gap-2">
@@ -162,13 +162,11 @@ export default function CreateVaultDialog() {
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              className="border-[#c9c1b0] text-[#4f3b38] hover:bg-[#f0eddf]"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-[#09443D] text-[#f0eddf] hover:bg-[#09443D]/90"
               disabled={mutation.isPending}
             >
               {mutation.isPending ? "Creating..." : "Create Vault"}

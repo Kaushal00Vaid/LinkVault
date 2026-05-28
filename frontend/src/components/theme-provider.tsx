@@ -58,24 +58,7 @@ function disableTransitionsTemporarily() {
   }
 }
 
-// function isEditableTarget(target: EventTarget | null) {
-//   if (!(target instanceof HTMLElement)) {
-//     return false
-//   }
 
-//   if (target.isContentEditable) {
-//     return true
-//   }
-
-//   const editableParent = target.closest(
-//     "input, textarea, select, [contenteditable='true']"
-//   )
-//   if (editableParent) {
-//     return true
-//   }
-
-//   return false
-// }
 
 export function ThemeProvider({
   children,
@@ -139,46 +122,34 @@ export function ThemeProvider({
     }
   }, [theme, applyTheme])
 
-  // click "d" to toggle theme
-  // React.useEffect(() => {
-  //   const handleKeyDown = (event: KeyboardEvent) => {
-  //     if (event.repeat) {
-  //       return
-  //     }
+  // Ctrl+D to toggle theme
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat) {
+        return
+      }
 
-  //     if (event.metaKey || event.ctrlKey || event.altKey) {
-  //       return
-  //     }
+      // Must be Ctrl+D (or Cmd+D on Mac)
+      if (!(event.ctrlKey || event.metaKey)) {
+        return
+      }
 
-  //     if (isEditableTarget(event.target)) {
-  //       return
-  //     }
+      if (event.key.toLowerCase() !== "d") {
+        return
+      }
 
-  //     if (event.key.toLowerCase() !== "d") {
-  //       return
-  //     }
+      // Prevent browser bookmark shortcut
+      event.preventDefault()
 
-  //     setThemeState((currentTheme) => {
-  //       const nextTheme =
-  //         currentTheme === "dark"
-  //           ? "light"
-  //           : currentTheme === "light"
-  //             ? "dark"
-  //             : getSystemTheme() === "dark"
-  //               ? "light"
-  //               : "dark"
+      setTheme(theme === "dark" ? "light" : "dark")
+    }
 
-  //       localStorage.setItem(storageKey, nextTheme)
-  //       return nextTheme
-  //     })
-  //   }
+    window.addEventListener("keydown", handleKeyDown)
 
-  //   window.addEventListener("keydown", handleKeyDown)
-
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown)
-  //   }
-  // }, [storageKey])
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [theme, setTheme])
 
   React.useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
